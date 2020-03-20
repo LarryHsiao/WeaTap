@@ -1,7 +1,9 @@
 package com.larryhsiao.aura.weatap;
 
 import android.app.Activity;
+import android.content.Context;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 import com.google.android.gms.location.*;
 import com.google.gson.JsonParser;
 import com.silverhetch.aura.location.LocationAddress;
@@ -24,6 +27,10 @@ import java.util.List;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static android.location.LocationManager.GPS_PROVIDER;
+import static android.location.LocationManager.NETWORK_PROVIDER;
+import static androidx.swiperefreshlayout.widget.CircularProgressDrawable.LARGE;
+import static com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY;
 import static com.larryhsiao.aura.weatap.BuildConfig.OPEN_WEATHER_API_KEY;
 
 /**
@@ -31,11 +38,17 @@ import static com.larryhsiao.aura.weatap.BuildConfig.OPEN_WEATHER_API_KEY;
  */
 public class MainActivity extends Activity {
     private static final int RC_LOCATION_PERMISSION = 1000;
+    private ImageView conditionImage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        conditionImage = findViewById(R.id.main_conditionImage);
+        CircularProgressDrawable progress = new CircularProgressDrawable(this);
+        progress.setStyle(LARGE);
+        progress.start();
+        conditionImage.setImageDrawable(progress);
 
         if (ContextCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) ==
                 PERMISSION_GRANTED) {
@@ -52,18 +65,23 @@ public class MainActivity extends Activity {
                 ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) ==
                         PERMISSION_GRANTED) {
             fetchLocation();
-        }else{
+        } else {
             showNoGps();
         }
     }
 
     private void fetchLocation() {
+        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        if (!lm.isProviderEnabled(GPS_PROVIDER) && !lm.isProviderEnabled(NETWORK_PROVIDER)) {
+            showNoGps();
+            return;
+        }
         FusedLocationProviderClient client =
                 LocationServices.getFusedLocationProviderClient(this);
         LocationRequest request = LocationRequest.create();
-        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        request.setPriority(PRIORITY_HIGH_ACCURACY);
         request.setNumUpdates(1);
-        client.requestLocationUpdates(request, new LocationCallback(){
+        client.requestLocationUpdates(request, new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
@@ -77,6 +95,7 @@ public class MainActivity extends Activity {
     }
 
     private void onLocationLoaded(final Location location) {
+//        Toast.makeText(this, new LocationAddress(this, location).value().getAddressLine(0), Toast.LENGTH_LONG).show();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -134,19 +153,16 @@ public class MainActivity extends Activity {
     }
 
     private void showRain() {
-        ImageView conditionImage = findViewById(R.id.main_conditionImage);
         conditionImage.setImageResource(R.drawable.ic_umbrella);
         exit();
     }
 
     private void showNotRain() {
-        ImageView conditionImage = findViewById(R.id.main_conditionImage);
         conditionImage.setImageResource(R.drawable.ic_ok);
         exit();
     }
 
     private void showNoGps() {
-        ImageView conditionImage = findViewById(R.id.main_conditionImage);
         conditionImage.setImageResource(R.drawable.ic_no_gps);
         exit();
     }
