@@ -77,8 +77,6 @@ public class MainActivity extends Activity {
     }
 
     private void onLocationLoaded(final Location location) {
-        Toast.makeText(this , new LocationAddress(this, location).value().getAddressLine(0)
-        , Toast.LENGTH_SHORT).show();
         new Thread(new Runnable() {
             @Override
             public void run() {
