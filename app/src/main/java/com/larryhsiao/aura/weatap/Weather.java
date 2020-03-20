@@ -13,4 +13,9 @@ public interface Weather {
      * Is it raining?
      */
     boolean raining();
+
+    /**
+     * The icon url that present this weather.
+     */
+    String iconUrl();
 }

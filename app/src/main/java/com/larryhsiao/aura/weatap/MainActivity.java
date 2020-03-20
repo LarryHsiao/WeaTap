@@ -2,6 +2,9 @@ package com.larryhsiao.aura.weatap;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import com.google.gson.JsonParser;
 import okhttp3.HttpUrl;
@@ -50,7 +53,7 @@ public class MainActivity extends Activity {
     }
 
     private void proceedForecast(String response) {
-        List<Weather> forecasts = new OWForecasts(
+        final List<Weather> forecasts = new OWForecasts(
                 JsonParser.parseString(response).getAsJsonObject()
         ).value();
 
@@ -58,21 +61,48 @@ public class MainActivity extends Activity {
         for (int i = 0; i < forecasts.size() && i <= 5; i++) {
             if (forecasts.get(i).raining()) {
                 rainCounter++;
+                final int finalI = i;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showRain();
+                    }
+                });
             }
         }
 
-        if (rainCounter > 0) {
-            showRain();
-        } else {
-            showNotRain();
-        }
+        final boolean rain = rainCounter > 0;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (!rain) {
+                    showNotRain();
+                }
+            }
+        });
     }
 
     private void showRain() {
-        // @todo 1 inform rain
+        ImageView conditionImage = findViewById(R.id.main_conditionImage);
+        conditionImage.setImageResource(R.drawable.ic_umbrella);
+        exit();
     }
 
     private void showNotRain() {
-        // @todo 2 inform not rain
+        ImageView conditionImage = findViewById(R.id.main_conditionImage);
+        conditionImage.setImageResource(R.drawable.ic_ok);
+        exit();
+    }
+
+    private void exit() {
+        new Handler(Looper.getMainLooper()).postDelayed(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                    }
+                },
+                1500
+        );
     }
 }
