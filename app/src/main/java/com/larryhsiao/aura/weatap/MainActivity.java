@@ -1,12 +1,18 @@
 package com.larryhsiao.aura.weatap;
 
 import android.app.Activity;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.ImageView;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import com.google.android.gms.location.*;
 import com.google.gson.JsonParser;
+import com.silverhetch.aura.location.LocationAddress;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -15,17 +21,64 @@ import okhttp3.Response;
 import java.io.IOException;
 import java.util.List;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.larryhsiao.aura.weatap.BuildConfig.OPEN_WEATHER_API_KEY;
 
 /**
  * Entry Activity for this app
  */
 public class MainActivity extends Activity {
+    private static final int RC_LOCATION_PERMISSION = 1000;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (ContextCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) ==
+                PERMISSION_GRANTED) {
+            fetchLocation();
+        } else {
+            requestPermissions(new String[]{ACCESS_FINE_LOCATION}, RC_LOCATION_PERMISSION);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == RC_LOCATION_PERMISSION &&
+                ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) ==
+                        PERMISSION_GRANTED) {
+            fetchLocation();
+        }else{
+            showNoGps();
+        }
+    }
+
+    private void fetchLocation() {
+        FusedLocationProviderClient client =
+                LocationServices.getFusedLocationProviderClient(this);
+        LocationRequest request = LocationRequest.create();
+        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        request.setNumUpdates(1);
+        client.requestLocationUpdates(request, new LocationCallback(){
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                if (locationResult != null) {
+                    onLocationLoaded(locationResult.getLocations().get(0));
+                } else {
+                    showNoGps();
+                }
+            }
+        }, Looper.getMainLooper());
+    }
+
+    private void onLocationLoaded(final Location location) {
+        Toast.makeText(this , new LocationAddress(this, location).value().getAddressLine(0)
+        , Toast.LENGTH_SHORT).show();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -36,8 +89,8 @@ public class MainActivity extends Activity {
                                     .scheme("https")
                                     .host("api.openweathermap.org")
                                     .addEncodedPathSegments("/data/2.5/forecast")
-                                    .addQueryParameter("lat", "24.1157643")
-                                    .addQueryParameter("lon", "120.7183163")
+                                    .addQueryParameter("lat", "" + location.getLatitude())
+                                    .addQueryParameter("lon", "" + location.getLongitude())
                                     .addQueryParameter("appid", OPEN_WEATHER_API_KEY)
                                     .build()
                     ).build();
@@ -91,6 +144,12 @@ public class MainActivity extends Activity {
     private void showNotRain() {
         ImageView conditionImage = findViewById(R.id.main_conditionImage);
         conditionImage.setImageResource(R.drawable.ic_ok);
+        exit();
+    }
+
+    private void showNoGps() {
+        ImageView conditionImage = findViewById(R.id.main_conditionImage);
+        conditionImage.setImageResource(R.drawable.ic_no_gps);
         exit();
     }
 
