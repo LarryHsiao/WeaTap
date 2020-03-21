@@ -10,12 +10,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 import com.google.android.gms.location.*;
 import com.google.gson.JsonParser;
+import com.silverhetch.aura.location.LocationAddress;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -27,9 +29,9 @@ import java.util.List;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static android.graphics.Color.WHITE;
 import static android.location.LocationManager.GPS_PROVIDER;
 import static android.location.LocationManager.NETWORK_PROVIDER;
+import static android.view.View.VISIBLE;
 import static androidx.swiperefreshlayout.widget.CircularProgressDrawable.LARGE;
 import static com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY;
 import static com.larryhsiao.aura.weatap.BuildConfig.OPEN_WEATHER_API_KEY;
@@ -82,9 +84,12 @@ public class MainActivity extends Activity {
     }
 
     private void showDetail() {
+        View locationText = findViewById(R.id.main_locationText);
+        locationText.setVisibility(VISIBLE);
+        locationText.animate().alpha(1);
         View confirm = findViewById(R.id.main_confirmButton);
         confirm.animate().alpha(1);
-        confirm.setVisibility(View.VISIBLE);
+        confirm.setVisibility(VISIBLE);
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,6 +141,10 @@ public class MainActivity extends Activity {
     }
 
     private void onLocationLoaded(final Location location) {
+        TextView locationText = findViewById(R.id.main_locationText);
+        locationText.setText(new LocationString(new LocationAddress(
+                this, location
+        ).value()).value());
         new Thread(new Runnable() {
             @Override
             public void run() {

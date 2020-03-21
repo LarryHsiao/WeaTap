@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:background="#fff"
+        tools:background="#777777"
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
             android:layout_gravity="center"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:background="@drawable/bg_main"
             android:layout_height="wrap_content">
 
@@ -40,5 +45,19 @@
                    android:visibility="gone"
                    android:layout_height="50dp"/>
 
+        <TextView android:layout_width="wrap_content"
+                  app:layout_constraintStart_toStartOf="parent"
+                  app:layout_constraintEnd_toEndOf="parent"
+                  android:id="@+id/main_locationText"
+                  android:layout_marginTop="8dp"
+                  android:visibility="gone"
+                  tools:visibility="visible"
+                  android:layout_marginBottom="16dp"
+                  android:textColor="#3B4552"
+                  android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                  app:layout_constraintBottom_toBottomOf="parent"
+                  tools:text="Location, Country"
+                  app:layout_constraintTop_toBottomOf="@id/main_conditionImage"
+                  android:layout_height="wrap_content"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
