@@ -27,6 +27,7 @@ import java.util.List;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static android.graphics.Color.WHITE;
 import static android.location.LocationManager.GPS_PROVIDER;
 import static android.location.LocationManager.NETWORK_PROVIDER;
 import static androidx.swiperefreshlayout.widget.CircularProgressDrawable.LARGE;
@@ -49,6 +50,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         conditionImage = findViewById(R.id.main_conditionImage);
         CircularProgressDrawable progress = new CircularProgressDrawable(this);
+        progress.setColorSchemeColors(WHITE);
         progress.setStyle(LARGE);
         progress.start();
         conditionImage.setImageDrawable(progress);
