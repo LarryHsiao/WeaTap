@@ -22,7 +22,7 @@ public class OWForecasts implements Source<List<Weather>> {
     public List<Weather> value() {
         List<Weather> res = new ArrayList<>();
         for (JsonElement item : obj.getAsJsonArray("list")) {
-            res.add(new OWWeather(item.getAsJsonObject()));
+            res.add(new CachedWeather(new OWWeather(item.getAsJsonObject())));
         }
         return res;
     }

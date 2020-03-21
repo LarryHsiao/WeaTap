@@ -1,6 +1,5 @@
 package com.larryhsiao.aura.weatap;
 
-import android.net.Uri;
 import com.google.gson.JsonObject;
 import com.silverhetch.clotho.time.HttpTimeFormat;
 
@@ -19,27 +18,24 @@ public class OWWeather implements Weather {
     @Override
     public String time() {
         return new HttpTimeFormat().value().format(
-
                 new Date(obj.get("dt").getAsLong() * 1000)
         );
     }
 
     @Override
-    public boolean raining() {
+    public Condition condition() {
         try {
             int weatherId = weatherObj().get("id").getAsInt();
-            return weatherId >= 500 && weatherId < 600;
+            if (weatherId >= 200 && weatherId < 700) {
+                return Condition.RAIN;
+            } else if (weatherId == 800) {
+                return Condition.CLEAR;
+            } else {
+                return Condition.CLOUD;
+            }
         } catch (Exception ignore) {
-            return false;
+            return Condition.CLEAR;
         }
-    }
-
-    @Override
-    public String iconUrl() {
-        return Uri.parse("https://openweathermap.org/img/wn/")
-                .buildUpon()
-                .appendPath(weatherObj().get("icon").getAsString() + "@2x.png")
-                .build().toString();
     }
 
     private JsonObject weatherObj() {
