@@ -50,7 +50,6 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         conditionImage = findViewById(R.id.main_conditionImage);
         CircularProgressDrawable progress = new CircularProgressDrawable(this);
-        progress.setColorSchemeColors(WHITE);
         progress.setStyle(LARGE);
         progress.start();
         conditionImage.setImageDrawable(progress);
