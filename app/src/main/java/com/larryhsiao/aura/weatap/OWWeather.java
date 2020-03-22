@@ -26,7 +26,7 @@ public class OWWeather implements Weather {
     public Condition condition() {
         try {
             int weatherId = weatherObj().get("id").getAsInt();
-            if (weatherId >= 200 && weatherId < 700) {
+            if (weatherId >= 200 && weatherId < 700 && rainVolume() > 0.5) {
                 return Condition.RAIN;
             } else if (weatherId == 800) {
                 return Condition.CLEAR;
@@ -36,6 +36,10 @@ public class OWWeather implements Weather {
         } catch (Exception ignore) {
             return Condition.CLEAR;
         }
+    }
+
+    private float rainVolume() {
+        return obj.getAsJsonObject("rain").get("3h").getAsFloat() / 3 ;
     }
 
     private JsonObject weatherObj() {
