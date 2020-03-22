@@ -1,5 +1,6 @@
 package com.larryhsiao.aura.weatap;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.silverhetch.clotho.time.HttpTimeFormat;
 
@@ -39,7 +40,17 @@ public class OWWeather implements Weather {
     }
 
     private float rainVolume() {
-        return obj.getAsJsonObject("rain").get("3h").getAsFloat() / 3 ;
+        try {
+            if (obj.has("rain")) {
+                JsonObject rain = obj.getAsJsonObject("rain");
+                if (rain.has("3h")) {
+                    return rain.get("3h").getAsFloat() / 3f;
+                }
+            }
+            return 0f;
+        } catch (Exception e) {
+            return 0f;
+        }
     }
 
     private JsonObject weatherObj() {
