@@ -1,6 +1,5 @@
 package com.larryhsiao.aura.weatap;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.silverhetch.clotho.time.HttpTimeFormat;
 
