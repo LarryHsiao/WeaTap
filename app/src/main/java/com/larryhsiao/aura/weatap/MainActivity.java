@@ -1,6 +1,7 @@
 package com.larryhsiao.aura.weatap;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -24,6 +25,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -31,6 +33,7 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.location.LocationManager.GPS_PROVIDER;
 import static android.location.LocationManager.NETWORK_PROVIDER;
+import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static androidx.swiperefreshlayout.widget.CircularProgressDrawable.LARGE;
 import static com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY;
@@ -41,8 +44,10 @@ import static com.larryhsiao.aura.weatap.Weather.Condition.*;
  * Entry Activity for this app
  */
 public class MainActivity extends Activity {
-    private Handler handler = new Handler();
     private static final int RC_LOCATION_PERMISSION = 1000;
+    private Handler handler = new Handler();
+
+    private final ArrayList<Weather> forecasts = new ArrayList<>();
     private ImageView conditionImage;
     private boolean userTapped = false;
 
@@ -84,8 +89,8 @@ public class MainActivity extends Activity {
     }
 
     private void showDetail() {
-        View locationText = findViewById(R.id.main_locationText);
-        locationText.setVisibility(VISIBLE);
+        TextView locationText = findViewById(R.id.main_locationText);
+        locationText.setVisibility(locationText.getText().toString().trim().isEmpty() ? GONE : VISIBLE);
         locationText.animate().alpha(1);
         View confirm = findViewById(R.id.main_confirmButton);
         confirm.animate().alpha(1);
@@ -94,6 +99,17 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        View more = findViewById(R.id.main_more);
+        more.animate().alpha(1);
+        more.setVisibility(forecasts.isEmpty() ? GONE : VISIBLE);
+        more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(DetailActivity.newIntent(v.getContext(), forecasts));
             }
         });
     }
@@ -163,6 +179,13 @@ public class MainActivity extends Activity {
                     Response res = client.newCall(request).execute();
                     if (res.isSuccessful()) {
                         proceedForecast(res.body().string());
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showNoGps();
+                            }
+                        });
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -172,9 +195,10 @@ public class MainActivity extends Activity {
     }
 
     private void proceedForecast(String response) {
-        final List<Weather> forecasts = new OWForecasts(
+        forecasts.clear();
+        forecasts.addAll(new OWForecasts(
                 JsonParser.parseString(response).getAsJsonObject()
-        ).value();
+        ).value());
 
         if (forecasts.size() == 0) {
             showNoGps();

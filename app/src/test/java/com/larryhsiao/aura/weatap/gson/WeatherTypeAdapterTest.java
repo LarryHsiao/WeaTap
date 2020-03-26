@@ -6,6 +6,9 @@ import com.larryhsiao.aura.weatap.Weather;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Collections;
+import java.util.List;
+
 import static com.larryhsiao.aura.weatap.Weather.Condition.RAIN;
 
 /**
@@ -45,6 +48,23 @@ public class WeatherTypeAdapterTest {
                 gson.fromJson("{\"condition\":\"RAIN\",\"time\":\"123\"}",
                         Weather.class
                 ).condition()
+        );
+    }
+
+    /**
+     * Convert Json as array
+     */
+    @Test
+    public void arrayToJson() {
+        List<ConstWeather> weather = Collections.singletonList(new ConstWeather("123", RAIN));
+
+        Assert.assertEquals(
+                "[{\"condition\":\"RAIN\",\"time\":\"123\"}]",
+                new Gson().newBuilder()
+                        .registerTypeHierarchyAdapter(
+                                Weather.class,
+                                new WeatherTypeAdapter()
+                        ).create().toJson(weather)
         );
     }
 }
