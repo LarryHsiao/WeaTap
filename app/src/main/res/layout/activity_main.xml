@@ -25,7 +25,6 @@
                 android:layout_margin="16dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:background="@android:color/darker_gray"
                 android:scaleType="fitCenter"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -46,18 +45,20 @@
                    android:layout_height="50dp"/>
 
         <TextView android:layout_width="wrap_content"
-                  app:layout_constraintStart_toStartOf="parent"
-                  app:layout_constraintEnd_toEndOf="parent"
                   android:id="@+id/main_locationText"
-                  android:layout_marginTop="8dp"
+                  app:layout_constraintStart_toStartOf="@id/main_conditionImage"
+                  app:layout_constraintEnd_toEndOf="@id/main_conditionImage"
                   android:visibility="gone"
+                  android:paddingStart="16dp"
+                  android:paddingEnd="16dp"
                   tools:visibility="visible"
-                  android:layout_marginBottom="16dp"
-                  android:textColor="#3B4552"
+                  android:gravity="center"
+                  android:alpha="0"
+                  android:textColor="#ffffff"
+                  android:background="@drawable/bg_overlay"
                   android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                  app:layout_constraintBottom_toBottomOf="parent"
+                  app:layout_constraintBottom_toBottomOf="@id/main_conditionImage"
                   tools:text="Location, Country"
-                  app:layout_constraintTop_toBottomOf="@id/main_conditionImage"
                   android:layout_height="wrap_content"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
