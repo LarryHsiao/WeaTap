@@ -1,8 +1,10 @@
-package com.larryhsiao.aura.weatap;
+package com.larryhsiao.aura.weatap.openweatehr;
 
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.larryhsiao.aura.weatap.CachedWeather;
+import com.larryhsiao.aura.weatap.Weather;
 import com.silverhetch.clotho.Source;
 
 import java.util.ArrayList;

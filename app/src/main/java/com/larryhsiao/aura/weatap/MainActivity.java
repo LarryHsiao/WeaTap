@@ -17,11 +17,8 @@ import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 import com.google.android.gms.location.*;
 import com.google.gson.JsonParser;
+import com.larryhsiao.aura.weatap.openweatehr.ForecastByLatLong;
 import com.silverhetch.aura.location.LocationAddress;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,7 +32,6 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static androidx.swiperefreshlayout.widget.CircularProgressDrawable.LARGE;
 import static com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY;
-import static com.larryhsiao.aura.weatap.BuildConfig.OPEN_WEATHER_API_KEY;
 import static com.larryhsiao.aura.weatap.Weather.Condition.RAIN;
 
 /**
@@ -163,41 +159,20 @@ public class MainActivity extends Activity {
             @Override
             public void run() {
                 try {
-                    OkHttpClient client = new OkHttpClient();
-                    Request request = new Request.Builder().url(
-                            new HttpUrl.Builder()
-                                    .scheme("https")
-                                    .host("api.openweathermap.org")
-                                    .addEncodedPathSegments("/data/2.5/forecast")
-                                    .addQueryParameter("lat", "" + location.getLatitude())
-                                    .addQueryParameter("lon", "" + location.getLongitude())
-                                    .addQueryParameter("appid", OPEN_WEATHER_API_KEY)
-                                    .build()
-                    ).build();
-                    Response res = client.newCall(request).execute();
-                    if (res.isSuccessful()) {
-                        proceedForecast(res.body().string());
-                    } else {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                showNoGps();
-                            }
-                        });
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    forecasts.clear();
+                    forecasts.addAll(new ForecastByLatLong(
+                            location.getLatitude(),
+                            location.getLongitude()
+                    ).value());
+                    proceedForecast();
+                } catch (Exception e) {
+                    showNoGps();
                 }
             }
         }).start();
     }
 
-    private void proceedForecast(String response) {
-        forecasts.clear();
-        forecasts.addAll(new OWForecasts(
-                JsonParser.parseString(response).getAsJsonObject()
-        ).value());
-
+    private void proceedForecast() {
         if (forecasts.size() == 0) {
             showNoGps();
             return;
