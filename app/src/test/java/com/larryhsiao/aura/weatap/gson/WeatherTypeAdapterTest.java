@@ -20,9 +20,9 @@ public class WeatherTypeAdapterTest {
      */
     @Test
     public void toJson() {
-        Weather weather = new ConstWeather("123", RAIN);
+        Weather weather = new ConstWeather("123", RAIN, -1f);
         Assert.assertEquals(
-                "{\"condition\":\"RAIN\",\"time\":\"123\"}",
+                "{\"condition\":\"RAIN\",\"time\":\"123\",\"rainVolume\":-1.0}",
                 new Gson().newBuilder()
                         .registerTypeHierarchyAdapter(
                                 Weather.class,
@@ -56,10 +56,10 @@ public class WeatherTypeAdapterTest {
      */
     @Test
     public void arrayToJson() {
-        List<ConstWeather> weather = Collections.singletonList(new ConstWeather("123", RAIN));
+        List<ConstWeather> weather = Collections.singletonList(new ConstWeather("123", RAIN, -1f));
 
         Assert.assertEquals(
-                "[{\"condition\":\"RAIN\",\"time\":\"123\"}]",
+                "[{\"condition\":\"RAIN\",\"time\":\"123\",\"rainVolume\":-1.0}]",
                 new Gson().newBuilder()
                         .registerTypeHierarchyAdapter(
                                 Weather.class,

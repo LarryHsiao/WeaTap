@@ -4,11 +4,12 @@ package com.larryhsiao.aura.weatap;
  * The Weather
  */
 public interface Weather {
-    public enum Condition {
+    enum Condition {
         CLEAR,
         CLOUD,
         RAIN,
     }
+
     /**
      * The time of this weather record.
      */
@@ -18,4 +19,9 @@ public interface Weather {
      * The condition of this weather
      */
     Condition condition();
+
+    /**
+     * The volume(mm) one hour.
+     */
+    float rainVolume();
 }

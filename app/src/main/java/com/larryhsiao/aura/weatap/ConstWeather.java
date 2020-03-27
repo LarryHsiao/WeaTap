@@ -6,10 +6,12 @@ package com.larryhsiao.aura.weatap;
 public class ConstWeather implements Weather {
     private final String time;
     private final Condition condition;
+    private final float rainVolume;
 
-    public ConstWeather(String time, Condition condition) {
+    public ConstWeather(String time, Condition condition, float rainVolume) {
         this.time = time;
         this.condition = condition;
+        this.rainVolume = rainVolume;
     }
 
     @Override
@@ -20,5 +22,10 @@ public class ConstWeather implements Weather {
     @Override
     public Condition condition() {
         return condition;
+    }
+
+    @Override
+    public float rainVolume() {
+        return rainVolume;
     }
 }

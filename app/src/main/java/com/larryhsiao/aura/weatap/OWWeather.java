@@ -38,7 +38,8 @@ public class OWWeather implements Weather {
         }
     }
 
-    private float rainVolume() {
+    @Override
+    public float rainVolume() {
         try {
             if (obj.has("rain")) {
                 JsonObject rain = obj.getAsJsonObject("rain");

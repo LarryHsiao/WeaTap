@@ -1,7 +1,6 @@
 package com.larryhsiao.aura.weatap;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -26,7 +25,6 @@ import okhttp3.Response;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -38,7 +36,7 @@ import static android.view.View.VISIBLE;
 import static androidx.swiperefreshlayout.widget.CircularProgressDrawable.LARGE;
 import static com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY;
 import static com.larryhsiao.aura.weatap.BuildConfig.OPEN_WEATHER_API_KEY;
-import static com.larryhsiao.aura.weatap.Weather.Condition.*;
+import static com.larryhsiao.aura.weatap.Weather.Condition.RAIN;
 
 /**
  * Entry Activity for this app
@@ -109,7 +107,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 finish();
-                startActivity(DetailActivity.newIntent(v.getContext(), forecasts));
+                startActivity(ForecastActivity.newIntent(v.getContext(), forecasts));
             }
         });
     }
@@ -240,13 +238,7 @@ public class MainActivity extends Activity {
     }
 
     private void showNextForecastCondition(Weather weather) {
-        if (weather.condition() == CLEAR) {
-            conditionImage.setImageResource(R.drawable.ic_clear);
-        } else if (weather.condition() == CLOUD) {
-            conditionImage.setImageResource(R.drawable.ic_cloud);
-        } else {
-            conditionImage.setImageResource(R.drawable.ic_ok);
-        }
+        conditionImage.setImageResource(new ConditionImageRes(weather).value());
         preferExit();
     }
 

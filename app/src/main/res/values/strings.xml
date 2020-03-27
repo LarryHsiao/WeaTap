@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Umbrella?</string>
+    <string name="forecast">Forecast</string>
 </resources>
