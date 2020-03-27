@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,7 +42,9 @@ public class DetailActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_detail);
         location = getIntent().getParcelableExtra(ARG_LOCATION);
-        setTitle(new LocationString(new LocationAddress(this, location).value()).value());
+        ((TextView) findViewById(R.id.detail_title)).setText(
+                new LocationString(new LocationAddress(this, location).value()).value()
+        );
         Gson gson = ((WeaTapApplication) getApplicationContext()).jsonParser();
         List<Weather> forecast = gson.fromJson(
                 getIntent().getStringExtra(ARG_FORECAST_JSON),
