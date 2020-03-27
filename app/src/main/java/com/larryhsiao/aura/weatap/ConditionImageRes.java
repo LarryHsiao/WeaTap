@@ -17,6 +17,8 @@ public class ConditionImageRes implements Source<Integer> {
         // include Clear case
         if (weather.condition() == Weather.Condition.CLOUD) {
             return R.drawable.ic_cloud;
+        }else if(weather.condition() == Weather.Condition.RAIN){
+            return R.drawable.ic_umbrella;
         }
         return R.drawable.ic_clear;
     }

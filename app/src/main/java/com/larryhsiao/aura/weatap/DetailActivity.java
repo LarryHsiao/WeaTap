@@ -1,32 +1,28 @@
 package com.larryhsiao.aura.weatap;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.widget.ImageView;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.larryhsiao.aura.weatap.openweatehr.WeatherByLatLong;
-import com.silverhetch.clotho.time.HttpTimeFormat;
+import com.silverhetch.aura.location.LocationAddress;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
 
 /**
  * Detail view for given forecast data
  */
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends Activity {
     private static final String ARG_FORECAST_JSON = "ARG_FORECAST_JSON";
     private static final String ARG_LOCATION = "ARG_LOCATION";
     private ForecastAdapter adapter;
@@ -45,6 +41,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_detail);
         location = getIntent().getParcelableExtra(ARG_LOCATION);
+        setTitle(new LocationString(new LocationAddress(this, location).value()).value());
         Gson gson = ((WeaTapApplication) getApplicationContext()).jsonParser();
         List<Weather> forecast = gson.fromJson(
                 getIntent().getStringExtra(ARG_FORECAST_JSON),
