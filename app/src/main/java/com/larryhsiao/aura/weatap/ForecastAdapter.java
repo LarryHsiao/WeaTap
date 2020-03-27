@@ -25,7 +25,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ViewHolder> {
         return new ViewHolder(
                 LayoutInflater.from(parent.getContext())
                         .inflate(
-                                R.layout.item_forecast,
+                                R.layout.item_weather,
                                 parent,
                                 false
                         )

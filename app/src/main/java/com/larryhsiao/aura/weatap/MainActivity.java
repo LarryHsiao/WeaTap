@@ -16,11 +16,9 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 import com.google.android.gms.location.*;
-import com.google.gson.JsonParser;
 import com.larryhsiao.aura.weatap.openweatehr.ForecastByLatLong;
 import com.silverhetch.aura.location.LocationAddress;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -42,6 +40,7 @@ public class MainActivity extends Activity {
     private Handler handler = new Handler();
 
     private final ArrayList<Weather> forecasts = new ArrayList<>();
+    private final Location currentLocation = new Location("Const");
     private ImageView conditionImage;
     private boolean userTapped = false;
 
@@ -103,7 +102,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 finish();
-                startActivity(ForecastActivity.newIntent(v.getContext(), forecasts));
+                startActivity(DetailActivity.newIntent(v.getContext(), forecasts, currentLocation));
             }
         });
     }
@@ -151,6 +150,7 @@ public class MainActivity extends Activity {
     }
 
     private void onLocationLoaded(final Location location) {
+        this.currentLocation.set(location);
         TextView locationText = findViewById(R.id.main_locationText);
         locationText.setText(new LocationString(new LocationAddress(
                 this, location
@@ -161,6 +161,7 @@ public class MainActivity extends Activity {
                 try {
                     forecasts.clear();
                     forecasts.addAll(new ForecastByLatLong(
+                            new AppHttpClient(MainActivity.this),
                             location.getLatitude(),
                             location.getLongitude()
                     ).value());

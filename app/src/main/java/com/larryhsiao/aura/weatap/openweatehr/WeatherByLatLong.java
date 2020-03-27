@@ -8,36 +8,31 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import java.util.List;
-
 import static com.larryhsiao.aura.weatap.BuildConfig.OPEN_WEATHER_API_KEY;
 
+
 /**
- * Source to build OpenWeather forecast data.
+ * Fetch current weather by geometry.
  */
-public class ForecastByLatLong implements Source<List<Weather>> {
+public class WeatherByLatLong implements Source<Weather> {
     private final Source<OkHttpClient> client;
     private final double latitude;
     private final double longitude;
 
-    public ForecastByLatLong(
-            Source<OkHttpClient> client,
-            double latitude,
-            double longitude
-    ) {
+    public WeatherByLatLong(Source<OkHttpClient> client, double latitude, double longitude) {
         this.client = client;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
     @Override
-    public List<Weather> value() {
+    public Weather value() {
         try {
             Request request = new Request.Builder().url(
                     new HttpUrl.Builder()
                             .scheme("https")
                             .host("api.openweathermap.org")
-                            .addEncodedPathSegments("/data/2.5/forecast")
+                            .addEncodedPathSegments("/data/2.5/weather")
                             .addQueryParameter("lat", "" + latitude)
                             .addQueryParameter("lon", "" + longitude)
                             .addQueryParameter("appid", OPEN_WEATHER_API_KEY)
@@ -45,9 +40,9 @@ public class ForecastByLatLong implements Source<List<Weather>> {
             ).build();
             Response res = client.value().newCall(request).execute();
             if (res.isSuccessful()) {
-                return new OWForecasts(
+                return new OWWeather(
                         JsonParser.parseString(res.body().string()).getAsJsonObject()
-                ).value();
+                );
             } else {
                 throw new RuntimeException("Fetching forecast failed: " + res.code());
             }

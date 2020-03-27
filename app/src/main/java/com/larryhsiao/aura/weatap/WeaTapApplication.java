@@ -4,17 +4,26 @@ import android.app.Application;
 import com.google.gson.Gson;
 import com.larryhsiao.aura.weatap.gson.WeatherTypeAdapter;
 import com.squareup.picasso.Picasso;
+import okhttp3.OkHttpClient;
 
 /**
  * Application of WeaTap
  */
 public class WeaTapApplication extends Application {
+    private OkHttpClient httpClient;
     private Gson gson = null;
     private Picasso picasso = null;
 
     @Override
     public void onCreate() {
         super.onCreate();
+    }
+
+    public OkHttpClient httpClient() {
+        if (httpClient == null) {
+            httpClient = new OkHttpClient.Builder().build();
+        }
+        return httpClient;
     }
 
     public Gson jsonParser() {
