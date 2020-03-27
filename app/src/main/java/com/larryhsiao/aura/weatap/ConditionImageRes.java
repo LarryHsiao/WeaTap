@@ -1,5 +1,6 @@
 package com.larryhsiao.aura.weatap;
 
+import com.larryhsiao.aura.weatap.core.Weather;
 import com.silverhetch.clotho.Source;
 
 /**

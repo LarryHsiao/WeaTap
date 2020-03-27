@@ -1,48 +1,54 @@
-package com.larryhsiao.aura.weatap.openweatehr;
+package com.larryhsiao.aura.weatap.core.openweatehr;
 
 import com.google.gson.JsonParser;
-import com.larryhsiao.aura.weatap.Weather;
+import com.larryhsiao.aura.weatap.core.Weather;
 import com.silverhetch.clotho.Source;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static com.larryhsiao.aura.weatap.BuildConfig.OPEN_WEATHER_API_KEY;
-
+import java.util.List;
 
 /**
- * Fetch current weather by geometry.
+ * Source to build OpenWeather forecast data.
  */
-public class WeatherByLatLong implements Source<Weather> {
+public class ForecastByLatLong implements Source<List<Weather>> {
     private final Source<OkHttpClient> client;
+    private final String key;
     private final double latitude;
     private final double longitude;
 
-    public WeatherByLatLong(Source<OkHttpClient> client, double latitude, double longitude) {
+    public ForecastByLatLong(
+            Source<OkHttpClient> client,
+            String key,
+            double latitude,
+            double longitude
+    ) {
         this.client = client;
+        this.key = key;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
     @Override
-    public Weather value() {
+    public List<Weather> value() {
         try {
             Request request = new Request.Builder().url(
                     new HttpUrl.Builder()
                             .scheme("https")
                             .host("api.openweathermap.org")
-                            .addEncodedPathSegments("/data/2.5/weather")
+                            .addEncodedPathSegments("/data/2.5/forecast")
                             .addQueryParameter("lat", "" + latitude)
                             .addQueryParameter("lon", "" + longitude)
-                            .addQueryParameter("appid", OPEN_WEATHER_API_KEY)
+                            .addQueryParameter("appid", key)
                             .build()
             ).build();
             Response res = client.value().newCall(request).execute();
             if (res.isSuccessful()) {
-                return new OWWeather(
+                return new OWForecasts(
                         JsonParser.parseString(res.body().string()).getAsJsonObject()
-                );
+                ).value();
             } else {
                 throw new RuntimeException("Fetching forecast failed: " + res.code());
             }

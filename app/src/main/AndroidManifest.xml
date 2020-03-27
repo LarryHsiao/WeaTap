@@ -3,31 +3,35 @@
           xmlns:dist="http://schemas.android.com/apk/distribution"
           package="com.larryhsiao.aura.weatap">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <dist:module dist:instant="true"/>
+
     <application
+            android:name=".WeaTapApplication"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
-            android:name=".WeaTapApplication"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
-                  android:noHistory="true"
-                  android:excludeFromRecents="true"
-                  android:theme="@style/Theme.Transparent">
+        <activity
+                android:name=".MainActivity"
+                android:excludeFromRecents="true"
+                android:noHistory="true"
+                android:theme="@style/Theme.Transparent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".DetailActivity"
-        android:theme="@style/Theme.Transparent"
-        />
+        <activity
+                android:name=".DetailActivity"
+                android:theme="@style/Theme.Transparent"/>
     </application>
-
-    <dist:module dist:instant="true"/>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.larryhsiao.aura.weatap;
+package com.larryhsiao.aura.weatap.core;
 
 /**
  * Constant of {@link Weather} obj.

@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.larryhsiao.aura.weatap.core.Weather;
 import com.silverhetch.aura.view.ViewHolder;
 import com.silverhetch.clotho.time.HttpTimeFormat;
 

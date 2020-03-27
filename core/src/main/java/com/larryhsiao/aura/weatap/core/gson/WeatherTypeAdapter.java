@@ -1,15 +1,15 @@
-package com.larryhsiao.aura.weatap.gson;
+package com.larryhsiao.aura.weatap.core.gson;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.larryhsiao.aura.weatap.ConstWeather;
-import com.larryhsiao.aura.weatap.Weather;
-import com.larryhsiao.aura.weatap.WeatherWrapper;
+import com.larryhsiao.aura.weatap.core.ConstWeather;
+import com.larryhsiao.aura.weatap.core.Weather;
+import com.larryhsiao.aura.weatap.core.WeatherWrapper;
 
 import java.io.IOException;
 
-import static com.larryhsiao.aura.weatap.Weather.Condition.CLEAR;
+import static com.larryhsiao.aura.weatap.core.Weather.Condition.CLEAR;
 
 /**
  * Adapter for gson to Serialize/Deserialize {@link Weather}

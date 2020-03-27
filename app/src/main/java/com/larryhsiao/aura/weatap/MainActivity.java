@@ -16,7 +16,8 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 import com.google.android.gms.location.*;
-import com.larryhsiao.aura.weatap.openweatehr.ForecastByLatLong;
+import com.larryhsiao.aura.weatap.core.Weather;
+import com.larryhsiao.aura.weatap.core.openweatehr.ForecastByLatLong;
 import com.silverhetch.aura.location.LocationAddress;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static androidx.swiperefreshlayout.widget.CircularProgressDrawable.LARGE;
 import static com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY;
-import static com.larryhsiao.aura.weatap.Weather.Condition.RAIN;
+import static com.larryhsiao.aura.weatap.core.Weather.Condition.RAIN;
 
 /**
  * Entry Activity for this app
@@ -162,6 +163,7 @@ public class MainActivity extends Activity {
                     forecasts.clear();
                     forecasts.addAll(new ForecastByLatLong(
                             new AppHttpClient(MainActivity.this),
+                            BuildConfig.OPEN_WEATHER_API_KEY,
                             location.getLatitude(),
                             location.getLongitude()
                     ).value());

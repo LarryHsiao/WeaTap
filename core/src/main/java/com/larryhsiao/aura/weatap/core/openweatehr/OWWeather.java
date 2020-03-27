@@ -1,7 +1,7 @@
-package com.larryhsiao.aura.weatap.openweatehr;
+package com.larryhsiao.aura.weatap.core.openweatehr;
 
 import com.google.gson.JsonObject;
-import com.larryhsiao.aura.weatap.Weather;
+import com.larryhsiao.aura.weatap.core.Weather;
 import com.silverhetch.clotho.time.HttpTimeFormat;
 
 import java.util.Date;

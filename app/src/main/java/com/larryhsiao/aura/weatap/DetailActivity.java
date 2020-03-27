@@ -12,7 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.larryhsiao.aura.weatap.openweatehr.WeatherByLatLong;
+import com.larryhsiao.aura.weatap.core.Weather;
+import com.larryhsiao.aura.weatap.core.openweatehr.WeatherByLatLong;
 import com.silverhetch.aura.location.LocationAddress;
 
 import java.util.ArrayList;
@@ -60,6 +61,7 @@ public class DetailActivity extends Activity {
             final int iconRes = new ConditionImageRes(
                     new WeatherByLatLong(
                             new AppHttpClient(DetailActivity.this),
+                            BuildConfig.OPEN_WEATHER_API_KEY,
                             location.getLatitude(),
                             location.getLongitude()
                     ).value()

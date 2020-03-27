@@ -1,15 +1,15 @@
-package com.larryhsiao.aura.weatap.gson;
+package com.larryhsiao.aura.weatap.core.gson;
 
 import com.google.gson.Gson;
-import com.larryhsiao.aura.weatap.ConstWeather;
-import com.larryhsiao.aura.weatap.Weather;
-import org.junit.Assert;
-import org.junit.Test;
+import com.larryhsiao.aura.weatap.core.ConstWeather;
+import com.larryhsiao.aura.weatap.core.Weather;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.List;
 
-import static com.larryhsiao.aura.weatap.Weather.Condition.RAIN;
+import static com.larryhsiao.aura.weatap.core.Weather.Condition.RAIN;
 
 /**
  * Unit-test for the class {@link WeatherTypeAdapter}
@@ -21,7 +21,7 @@ public class WeatherTypeAdapterTest {
     @Test
     public void toJson() {
         Weather weather = new ConstWeather("123", RAIN, -1f);
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 "{\"condition\":\"RAIN\",\"time\":\"123\",\"rainVolume\":-1.0}",
                 new Gson().newBuilder()
                         .registerTypeHierarchyAdapter(
@@ -43,7 +43,7 @@ public class WeatherTypeAdapterTest {
                         new WeatherTypeAdapter()
                 ).create();
 
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 RAIN,
                 gson.fromJson("{\"condition\":\"RAIN\",\"time\":\"123\"}",
                         Weather.class
@@ -58,7 +58,7 @@ public class WeatherTypeAdapterTest {
     public void arrayToJson() {
         List<ConstWeather> weather = Collections.singletonList(new ConstWeather("123", RAIN, -1f));
 
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 "[{\"condition\":\"RAIN\",\"time\":\"123\",\"rainVolume\":-1.0}]",
                 new Gson().newBuilder()
                         .registerTypeHierarchyAdapter(

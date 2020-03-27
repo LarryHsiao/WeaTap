@@ -2,7 +2,8 @@ package com.larryhsiao.aura.weatap;
 
 import android.app.Application;
 import com.google.gson.Gson;
-import com.larryhsiao.aura.weatap.gson.WeatherTypeAdapter;
+import com.larryhsiao.aura.weatap.core.Weather;
+import com.larryhsiao.aura.weatap.core.gson.WeatherTypeAdapter;
 import com.squareup.picasso.Picasso;
 import okhttp3.OkHttpClient;
 

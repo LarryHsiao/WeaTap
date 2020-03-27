@@ -1,4 +1,4 @@
-package com.larryhsiao.aura.weatap;
+package com.larryhsiao.aura.weatap.core;
 
 /**
  * Wrapper class for {@link Weather}
