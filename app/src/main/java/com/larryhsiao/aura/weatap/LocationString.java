@@ -15,11 +15,13 @@ public class LocationString implements Source<String> {
 
     @Override
     public String value() {
+        final String sub = address.getSubLocality();
+        final String locality = address.getLocality();
         return String.format(
-            "%s%s%s",
-            address.getLocality() == null ? "" : address.getLocality(),
-            address.getLocality() == null ? "" : ", ",
-            address.getCountryName() == null ? "" : address.getCountryName()
+                "%s%s%s",
+                sub == null ? "" : sub,
+                sub != null && locality != null ? ", " : "",
+                locality == null ? "" : locality
         );
     }
 }

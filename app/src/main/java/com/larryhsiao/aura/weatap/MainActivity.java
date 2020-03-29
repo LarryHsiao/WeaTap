@@ -216,7 +216,7 @@ public class MainActivity extends Activity {
     }
 
     private void showNextForecastCondition(Weather weather) {
-        conditionImage.setImageResource(new ConditionImageRes(weather).value());
+        conditionImage.setImageResource(new UmbrellaImagRes(weather).value());
         preferExit();
     }
 

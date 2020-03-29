@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
@@ -70,5 +71,9 @@ public class DetailActivity extends Activity {
             runOnUiThread(() -> ((ImageView) findViewById(R.id.detail_currentConditionImage))
                     .setImageResource(iconRes));
         }).start();
+
+        findViewById(R.id.detail_close).setOnClickListener(v -> {
+            finish();
+        });
     }
 }
