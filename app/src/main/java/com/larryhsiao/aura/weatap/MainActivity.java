@@ -206,7 +206,7 @@ public class MainActivity extends Activity {
     }
 
     private void showRain() {
-        conditionImage.setImageResource(R.drawable.ic_umbrella);
+        conditionImage.setImageResource(R.drawable.ic_umbrella_expanded);
         preferExit();
     }
 
