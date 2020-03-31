@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">Umbrella?</string>
     <string name="forecast">Forecast</string>
+    <string name="config">Config</string>
+    <string name="insensitive">Insensitive</string>
+    <string name="moderate">Moderate</string>
+    <string name="sensitive">Sensitive</string>
+    <string name="high">High</string>
+    <string name="medium">Medium</string>
+    <string name="low">Low</string>
+    <string name="sensitivity">Sensitivity</string>
 </resources>

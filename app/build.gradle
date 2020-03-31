@@ -7,8 +7,8 @@ android {
         applicationId "com.larryhsiao.aura.weatap"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 10005
-        versionName "1.0.5"
+        versionCode 10006
+        versionName "1.0.6"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "OPEN_WEATHER_API_KEY", "\"a5817f5f724548529f05f64e8780ee41\"")
@@ -29,6 +29,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':core')
+    implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.2'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation 'com.silverhetch:aura:1.21.3'

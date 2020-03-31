@@ -2,6 +2,7 @@ package com.larryhsiao.aura.weatap.core.openweatehr;
 
 import com.google.gson.JsonParser;
 import com.larryhsiao.aura.weatap.core.Weather;
+import com.larryhsiao.aura.weatap.core.config.WeaTapConfig;
 import com.silverhetch.clotho.Source;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -13,14 +14,17 @@ import okhttp3.Response;
  * Fetch current weather by geometry.
  */
 public class WeatherByLatLong implements Source<Weather> {
+    private final WeaTapConfig config;
     private final Source<OkHttpClient> client;
-    private final String key;
     private final double latitude;
     private final double longitude;
 
-    public WeatherByLatLong(Source<OkHttpClient> client, String key, double latitude, double longitude) {
+    public WeatherByLatLong(Source<OkHttpClient> client,
+                            WeaTapConfig config,
+                            double latitude,
+                            double longitude) {
         this.client = client;
-        this.key = key;
+        this.config = config;
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -35,13 +39,13 @@ public class WeatherByLatLong implements Source<Weather> {
                             .addEncodedPathSegments("/data/2.5/weather")
                             .addQueryParameter("lat", "" + latitude)
                             .addQueryParameter("lon", "" + longitude)
-                            .addQueryParameter("appid", key)
+                            .addQueryParameter("appid", config.apiKey())
                             .build()
             ).build();
             Response res = client.value().newCall(request).execute();
             if (res.isSuccessful()) {
                 return new OWWeather(
-                        JsonParser.parseString(res.body().string()).getAsJsonObject()
+                        config, JsonParser.parseString(res.body().string()).getAsJsonObject()
                 );
             } else {
                 throw new RuntimeException("Fetching forecast failed: " + res.code());

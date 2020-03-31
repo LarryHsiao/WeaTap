@@ -2,6 +2,7 @@ package com.larryhsiao.aura.weatap.core.openweatehr;
 
 import com.google.gson.JsonObject;
 import com.larryhsiao.aura.weatap.core.Weather;
+import com.larryhsiao.aura.weatap.core.config.WeaTapConfig;
 import com.silverhetch.clotho.time.HttpTimeFormat;
 
 import java.util.Date;
@@ -10,9 +11,11 @@ import java.util.Date;
  * Weather info from OpenWeather
  */
 public class OWWeather implements Weather {
+    private final WeaTapConfig config;
     private final JsonObject obj;
 
-    public OWWeather(JsonObject obj) {
+    public OWWeather(WeaTapConfig config, JsonObject obj) {
+        this.config = config;
         this.obj = obj;
     }
 
@@ -27,7 +30,7 @@ public class OWWeather implements Weather {
     public Condition condition() {
         try {
             int weatherId = weatherObj().get("id").getAsInt();
-            if (weatherId >= 200 && weatherId < 700 && (obj.has("rain") == rainVolume() >= 0.1)) {
+            if (weatherId >= 200 && weatherId < 700 && isRainByVolume()) {
                 return Condition.RAIN;
             } else if (weatherId == 800) {
                 return Condition.CLEAR;
@@ -36,6 +39,17 @@ public class OWWeather implements Weather {
             }
         } catch (Exception ignore) {
             return Condition.CLEAR;
+        }
+    }
+
+    private boolean isRainByVolume() {
+        switch (config.sensitive()) {
+            case LOW:
+                return (obj.has("rain") == rainVolume() >= 0.5);
+            case HIGH:
+                return true; // Use weather obj to determine if is raining now.
+            default:
+                return (obj.has("rain") == rainVolume() >= 0.1);
         }
     }
 

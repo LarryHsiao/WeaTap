@@ -32,6 +32,9 @@
         <activity
                 android:name=".DetailActivity"
                 android:theme="@style/Theme.Transparent"/>
+        <activity android:name=".ConfigActivity"
+                  android:theme="@style/Theme.Transparent"
+        />
     </application>
 
 </manifest>

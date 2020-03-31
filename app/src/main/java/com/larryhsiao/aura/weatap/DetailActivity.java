@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
@@ -14,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.larryhsiao.aura.weatap.core.Weather;
+import com.larryhsiao.aura.weatap.core.config.WeaTapConfig;
 import com.larryhsiao.aura.weatap.core.openweatehr.WeatherByLatLong;
 import com.silverhetch.aura.location.LocationAddress;
 
@@ -28,6 +28,7 @@ import static androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL;
 public class DetailActivity extends Activity {
     private static final String ARG_FORECAST_JSON = "ARG_FORECAST_JSON";
     private static final String ARG_LOCATION = "ARG_LOCATION";
+    private WeaTapConfig config;
     private ForecastAdapter adapter;
     private Location location;
 
@@ -43,6 +44,7 @@ public class DetailActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_detail);
+        config = ((WeaTapApplication) getApplication()).config();
         location = getIntent().getParcelableExtra(ARG_LOCATION);
         ((TextView) findViewById(R.id.detail_title)).setText(
                 new LocationString(new LocationAddress(this, location).value()).value()
@@ -62,8 +64,7 @@ public class DetailActivity extends Activity {
             final int iconRes = new ConditionImageRes(
                     new WeatherByLatLong(
                             new AppHttpClient(DetailActivity.this),
-                            BuildConfig.OPEN_WEATHER_API_KEY,
-                            location.getLatitude(),
+                            config, location.getLatitude(),
                             location.getLongitude()
                     ).value()
             ).value();

@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">帶傘嗎？</string>
+    <string name="config">設定</string>
+    <string name="forecast">預報</string>
+    <string name="moderate">適中</string>
+    <string name="sensitive">敏感</string>
+    <string name="insensitive">遲鈍</string>
+    <string name="high">高</string>
+    <string name="low">低</string>
+    <string name="medium">中</string>
+    <string name="sensitivity">敏感度</string>
 </resources>

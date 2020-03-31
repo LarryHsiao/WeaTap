@@ -1,6 +1,7 @@
 package com.larryhsiao.aura.weatap;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -17,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 import com.google.android.gms.location.*;
 import com.larryhsiao.aura.weatap.core.Weather;
+import com.larryhsiao.aura.weatap.core.config.WeaTapConfig;
 import com.larryhsiao.aura.weatap.core.openweatehr.ForecastByLatLong;
 import com.silverhetch.aura.location.LocationAddress;
 
@@ -39,6 +41,7 @@ import static com.larryhsiao.aura.weatap.core.Weather.Condition.RAIN;
 public class MainActivity extends Activity {
     private static final int RC_LOCATION_PERMISSION = 1000;
     private Handler handler = new Handler();
+    private WeaTapConfig config;
 
     private final ArrayList<Weather> forecasts = new ArrayList<>();
     private final Location currentLocation = new Location("Const");
@@ -50,16 +53,14 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         conditionImage = findViewById(R.id.main_conditionImage);
+        config = ((WeaTapApplication) getApplication()).config();
         CircularProgressDrawable progress = new CircularProgressDrawable(this);
         progress.setStyle(LARGE);
         progress.start();
         conditionImage.setImageDrawable(progress);
-        conditionImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                userTapped = true;
-                showDetail();
-            }
+        conditionImage.setOnClickListener(v -> {
+            userTapped = true;
+            showDetail();
         });
 
         if (ContextCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) ==
@@ -99,12 +100,17 @@ public class MainActivity extends Activity {
         View more = findViewById(R.id.main_more);
         more.animate().alpha(1);
         more.setVisibility(forecasts.isEmpty() ? GONE : VISIBLE);
-        more.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                startActivity(DetailActivity.newIntent(v.getContext(), forecasts, currentLocation));
-            }
+        more.setOnClickListener(v -> {
+            finish();
+            startActivity(DetailActivity.newIntent(v.getContext(), forecasts, currentLocation));
+        });
+
+        View config = findViewById(R.id.main_configButton);
+        config.animate().alpha(1);
+        config.setVisibility(VISIBLE);
+        config.setOnClickListener(v -> {
+            finish();
+            startActivity(new Intent(v.getContext(), ConfigActivity.class));
         });
     }
 
@@ -156,21 +162,18 @@ public class MainActivity extends Activity {
         locationText.setText(new LocationString(new LocationAddress(
                 this, location
         ).value()).value());
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    forecasts.clear();
-                    forecasts.addAll(new ForecastByLatLong(
-                            new AppHttpClient(MainActivity.this),
-                            BuildConfig.OPEN_WEATHER_API_KEY,
-                            location.getLatitude(),
-                            location.getLongitude()
-                    ).value());
-                    proceedForecast();
-                } catch (Exception e) {
-                    showNoGps();
-                }
+        new Thread(() -> {
+            try {
+                forecasts.clear();
+                forecasts.addAll(new ForecastByLatLong(
+                        config,
+                        new AppHttpClient(MainActivity.this),
+                        location.getLatitude(),
+                        location.getLongitude()
+                ).value());
+                proceedForecast();
+            } catch (Exception e) {
+                showNoGps();
             }
         }).start();
     }
@@ -227,15 +230,10 @@ public class MainActivity extends Activity {
 
     private void preferExit() {
         handler.postDelayed(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!userTapped) {
-                            finish();
-                        }
+                () -> {
+                    if (!userTapped) {
+                        finish();
                     }
-                },
-                1500
-        );
+                }, 1500);
     }
 }
