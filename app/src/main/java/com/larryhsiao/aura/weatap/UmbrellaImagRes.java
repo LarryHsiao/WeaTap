@@ -14,7 +14,7 @@ public class UmbrellaImagRes implements Source<Integer> {
     @Override
     public Integer value() {
         if (weather.condition() == Weather.Condition.RAIN) {
-            return R.drawable.ic_umbrella_expanded;
+            return R.drawable.ic_umbrella;
         } else {
             return R.drawable.ic_umbrella_collapsed;
         }
