@@ -5,6 +5,7 @@ package com.larryhsiao.aura.weatap.core;
  */
 public interface Weather {
     enum Condition {
+        THUNDERSTORM,
         CLEAR,
         CLOUD,
         RAIN,
